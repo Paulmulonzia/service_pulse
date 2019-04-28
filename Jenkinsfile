@@ -23,8 +23,8 @@ pipeline {
 	stage('Post-build Test') {
             steps {
                 echo 'Application Smoke test'
-                result = sh 'curl -Is localhost | head -1'
-		echo 'result: $(result)'
+                def output = sh(returnStdout: true, script: 'curl -Is localhost | head -1')
+		println "output = ${output}"
             }
         }
 
