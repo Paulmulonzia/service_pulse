@@ -4,22 +4,20 @@ pipeline {
         stage('Build') {
             steps {
 		echo 'Running build automation'
-                sh 'sudo /etc/init.d/apache2 start'
+                sh 'sudo /etc/init.d/apache2 start -y'
             }
         }
         stage('Pre-build Test') {
             steps {
 		echo 'Checking for Syntax errors'
 		sh 'python -m py_compile init.py'
-		echo 'Application Smoke test'
-                sh 'curl -Is localhost:5000 | head -1'
             }
         }
 	stage('DeployToStaging') {
             steps {
                 echo 'deploy flask app'
-                sh 'cp init.py /var/www/flask'
-		sh 'sudo /etc/init.d/apache2 restart'
+                sh 'sudo cp init.py /var/www/flask'
+		sh 'sudo /etc/init.d/apache2 restart -y'
             }
         }
 	stage('Post-build Test') {
