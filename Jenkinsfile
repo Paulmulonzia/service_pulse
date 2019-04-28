@@ -24,7 +24,7 @@ pipeline {
             steps {
                 echo 'Application Smoke test'
                 result = sh 'curl -Is localhost | head -1'
-		echo "result: $(result)"
+		echo 'result: $(result)'
             }
         }
 
