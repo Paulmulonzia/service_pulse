@@ -4,14 +4,32 @@ pipeline {
         stage('Build') {
             steps {
 		echo 'Running build automation'
-                sh 'python app.py'
+                sh 'service apache2 start'
             }
         }
-        stage('Test') {
+        stage('Pre-build Test') {
             steps {
+		echo 'Checking for Syntax errors'
+		sh 'python -m py_compile init.py'
+		echo 'Application Smoke test'
                 sh 'curl -Is localhost:5000 | head -1'
             }
         }
+	stage('DeployToStaging') {
+            steps {
+                echo 'deploy flask app'
+                sh 'cp init.py /var/www/flask'
+		sh 'service apahe2 restart'
+            }
+        }
+	stage('Post-build Test') {
+            steps {
+                echo 'Application Smoke test'
+                sh 'curl -Is localhost | head -1'
+            }
+        }
+
+
     }
 }
 
