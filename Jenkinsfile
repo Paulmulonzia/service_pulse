@@ -4,13 +4,12 @@ pipeline {
         stage('Build') {
             steps {
 		echo 'Running build automation'
-                sh './gradlew build --no-daemon'
-                archiveArtifacts artifacts: 'dist/trainSchedule.zip'
+                sh 'python app.py'
             }
         }
         stage('Test') {
             steps {
-                sh './jenkins/scripts/test.sh'
+                sh 'curl -Is localhost:5000 | head -1'
             }
         }
     }
