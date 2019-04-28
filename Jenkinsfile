@@ -4,7 +4,7 @@ pipeline {
         stage('Build') {
             steps {
 		echo 'Running build automation'
-                sh 'service apache2 start'
+                sh '/etc/init.d/apache2 start'
             }
         }
         stage('Pre-build Test') {
@@ -19,7 +19,7 @@ pipeline {
             steps {
                 echo 'deploy flask app'
                 sh 'cp init.py /var/www/flask'
-		sh 'service apahe2 restart'
+		sh '/etc/init.d/apache2 restart'
             }
         }
 	stage('Post-build Test') {
