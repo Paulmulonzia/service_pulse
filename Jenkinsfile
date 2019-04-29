@@ -14,7 +14,9 @@ pipeline {
             }
         }
 	stage('DeployToStaging') {
+	
             steps {
+	      checkout scm
 	      node('staging_server'){
                 echo 'deploy flask app'
                 sh 'sudo cp init.py /var/www/flask'
