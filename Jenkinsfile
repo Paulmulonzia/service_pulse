@@ -16,7 +16,6 @@ pipeline {
 	stage('DeployToStaging') {
 	
             steps {
-	      node('staging_server'){
 		echo 'deploy flask app'
                     sshPublisher(
                         failOnError: true,
@@ -38,7 +37,6 @@ pipeline {
                             )
                         ]
                     )
-                }
             }
 	}
 
