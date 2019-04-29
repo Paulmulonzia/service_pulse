@@ -39,6 +39,7 @@ pipeline {
                     )
                 }
             }
+	}
 
 	stage('Post-build Test') {
             steps {
