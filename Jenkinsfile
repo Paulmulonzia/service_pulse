@@ -18,7 +18,6 @@ pipeline {
             steps {
 	      node('staging_server'){
 		echo 'deploy flask app'
-                withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
                     sshPublisher(
                         failOnError: true,
                         continueOnError: false,
@@ -26,8 +25,7 @@ pipeline {
                             sshPublisherDesc(
                                 configName: 'staging',
                                 sshCredentials: [
-                                    username: "$USERNAME",
-                                    encryptedPassphrase: "$USERPASS"
+                                    username: "ubuntu",
                                 ], 
                                 transfers: [
                                     sshTransfer(
