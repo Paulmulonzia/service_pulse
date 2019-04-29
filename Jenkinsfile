@@ -16,14 +16,34 @@ pipeline {
 	stage('DeployToStaging') {
 	
             steps {
-	      checkout scm
 	      node('staging_server'){
                 echo 'deploy flask app'
-                sh 'sudo cp init.py /var/www/flask'
-		sh 'sudo /etc/init.d/apache2 restart -y'
-		}
+                withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+                    sshPublisher(
+                        failOnError: true,
+                        continueOnError: false,
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'staging',
+                                sshCredentials: [
+                                    username: "$USERNAME",
+                                    encryptedPassphrase: "$USERPASS"
+                                ], 
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: 'init.py',
+                                        remoteDirectory: '/var/www/flask',
+                                        execCommand: 'sudo /etc/init.d/apache2 restart -y'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                }
             }
-        }
+	}
+      }
+   }
 
 	stage('Post-build Test') {
             steps {
