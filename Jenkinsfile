@@ -16,8 +16,8 @@ pipeline {
 	stage('DeployToStaging') {
 	
             steps {
-		echo 'deploy flask app'
 	      node('staging_server'){
+		echo 'deploy flask app'
                 withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
                     sshPublisher(
                         failOnError: true,
