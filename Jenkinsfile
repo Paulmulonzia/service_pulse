@@ -30,7 +30,8 @@ pipeline {
                                 ], 
                                 transfers: [
                                     sshTransfer(
-                                        sourceFiles: 'init.py',
+                                        sourceFiles: '/var/lib/jenkins/workspace/flask_test_feature/init.py',
+					removePrefix: '/var/lib/jenkins/workspace/flask_test_feature/',
                                         remoteDirectory: '/var/www/flask',
                                         execCommand: 'sudo /etc/init.d/apache2 restart -y'
                                     )
