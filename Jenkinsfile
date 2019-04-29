@@ -15,16 +15,21 @@ pipeline {
         }
 	stage('DeployToStaging') {
             steps {
+	      node('staging_server'){
                 echo 'deploy flask app'
                 sh 'sudo cp init.py /var/www/flask'
 		sh 'sudo /etc/init.d/apache2 restart -y'
+		}
             }
         }
+
 	stage('Post-build Test') {
             steps {
+	      node('staging_server'){
                 echo 'Application Smoke test'
                 def output = sh(returnStdout: true, script: 'curl -Is localhost | head -1')
 		println "output = ${output}"
+		}
             }
         }
 
