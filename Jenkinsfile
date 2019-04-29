@@ -27,8 +27,7 @@ pipeline {
             steps {
 	      node('staging_server'){
                 echo 'Application Smoke test'
-                def output = sh(returnStdout: true, script: 'curl -Is localhost | head -1')
-		println "output = ${output}"
+                sh 'curl -Is localhost | head -1'
 		}
             }
         }
