@@ -7,7 +7,7 @@ pipeline {
                 sh 'sudo /etc/init.d/apache2 start -y'
             }
         }
-        stage('Pre-build Test') {
+        stage('Post-build Test') {
             steps {
 		echo 'Checking for Syntax errors'
 		sh 'python -m py_compile init.py'
@@ -39,7 +39,7 @@ pipeline {
             }
 	}
 
-	stage('Post-build Test') {
+	stage('Application Smoke Test') {
             steps {
 	      node('staging_server'){
                 echo 'Application Smoke test'
@@ -48,6 +48,34 @@ pipeline {
             }
         }
 
+	stage('DeployToProduction') {
+            when {
+                branch 'master'
+            }
+            steps {
+                input 'Does the staging environment look OK?'
+                echo 'deploy flask app'
+                    sshPublisher(
+                        failOnError: true,
+                        continueOnError: false,
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'prod',
+                                sshCredentials: [
+                                    username: "ubuntu",
+                                ], 
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: 'init.py',
+                                        remoteDirectory: '/var/www/flask',
+                                        execCommand: 'sudo /etc/init.d/apache2 restart -y'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+            }
+	}
 
     }
 }
