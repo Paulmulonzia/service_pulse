@@ -14,7 +14,6 @@ pipeline {
             }
         }
         stage('DeployToStaging') {
-
             steps {
                 echo 'deploy flask app'
                     sshPublisher(
@@ -36,7 +35,6 @@ pipeline {
                     )
             }
         }
-
         stage('Application Smoke Test') {
             steps {
               node('staging_server'){
@@ -45,7 +43,6 @@ pipeline {
                 }
             }
         }
-
         stage('DeployToProduction') {
             when {
                 branch 'master'
