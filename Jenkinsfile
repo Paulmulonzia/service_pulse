@@ -15,9 +15,9 @@ pipeline {
         }
         stage('DeployToStaging') {
             steps {
+		echo 'Change staging localhost directory permissions'
 		node('prod_server'){
-                  echo 'Change staging localhost directory permissions'
-                  sh 'sudo chown -hR /var/www/flask'
+                  sh 'sudo chown ubuntu -hR /var/www/flask'
                 }
                 echo 'deploy flask app'
                     sshPublisher(
@@ -53,9 +53,9 @@ pipeline {
             }
             steps {
                 input 'Does the staging environment look OK?'
+		echo 'Change localhost directory permissions'
 		node('prod_server'){
-                  echo 'Change localhost directory permissions'
-                  sh 'sudo chown -hR /var/www/flask'
+                  sh 'sudo chown ubuntu -hR /var/www/flask'
                 }
                 echo 'deploy flask app'
                     sshPublisher(
