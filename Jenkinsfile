@@ -23,12 +23,11 @@ pipeline {
                         publishers: [
                             sshPublisherDesc(
                                 configName: 'staging',
-                                sshCredentials: [
-                                    username: "ubuntu",
-                                ], 
+				verbose: true,
                                 transfers: [
                                     sshTransfer(
-                                        sourceFiles: 'init.py',
+                                        sourceFiles: 'flask_test_feature/init.py',
+					removePrefix: 'flask_test_feature/',
                                         remoteDirectory: '/var/www/flask',
                                         execCommand: 'sudo /etc/init.d/apache2 restart -y'
                                     )
@@ -48,35 +47,7 @@ pipeline {
             }
         }
 
-	stage('DeployToProduction') {
-            when {
-                branch 'master'
-            }
-            steps {
-                input 'Does the staging environment look OK?'
-                echo 'deploy flask app'
-                    sshPublisher(
-                        failOnError: true,
-                        continueOnError: false,
-                        publishers: [
-                            sshPublisherDesc(
-                                configName: 'prod',
-                                sshCredentials: [
-                                    username: "ubuntu",
-                                ], 
-                                transfers: [
-                                    sshTransfer(
-                                        sourceFiles: 'init.py',
-                                        remoteDirectory: '/var/www/flask',
-                                        execCommand: 'sudo /etc/init.d/apache2 restart -y'
-                                    )
-                                ]
-                            )
-                        ]
-                    )
-            }
-	}
+	
 
     }
 }
-
