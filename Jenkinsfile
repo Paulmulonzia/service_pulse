@@ -23,9 +23,7 @@ pipeline {
                         publishers: [
                             sshPublisherDesc(
                                 configName: 'staging',
-                                sshCredentials: [
-                                    username: "ubuntu",
-                                ], 
+                                verbose: true,
                                 transfers: [
                                     sshTransfer(
                                         sourceFiles: 'flask_test_feature/init.py',
