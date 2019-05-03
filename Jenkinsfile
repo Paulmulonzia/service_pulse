@@ -28,7 +28,7 @@ pipeline {
                                     sshTransfer(
                                         sourceFiles: 'init.py',
                                         remoteDirectory: '/var/www/flask',
-                                        execCommand: 'sudo chown ubuntu /var/www/flask && sudo /etc/init.d/apache2 restart -y'
+                                        execCommand: 'sudo chown -hR ubuntu /var/www/flask && sudo /etc/init.d/apache2 restart -y'
                                     )
                                 ]
                             )
@@ -46,7 +46,32 @@ pipeline {
             }
         }
 
-	
+	stage('DeployToProduction') {
+            when {
+                branch 'master'
+            }
+            steps {
+                input 'Does the staging environment look OK?'
+                echo 'deploy flask app'
+                    sshPublisher(
+                        failOnError: true,
+                        continueOnError: false,
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'prod',
+                                verbose: true,
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: 'init.py',
+                                        remoteDirectory: '/var/www/flask',
+                                        execCommand: 'sudo chown -hR ubuntu /var/www/flask && sudo /etc/init.d/apache2 restart -y'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+            }
+	}
 
     }
 }
