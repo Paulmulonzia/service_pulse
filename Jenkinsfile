@@ -77,6 +77,14 @@ pipeline {
                     )
             }
 	}
+	stage('Production Application Smoke Test') {
+            steps {
+              node('prod_server'){
+                echo 'Application Smoke test'
+                sh 'curl -Is localhost | head -1'
+                }
+            }
+        }
 
     }
 }
