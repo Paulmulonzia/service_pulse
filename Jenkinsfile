@@ -13,11 +13,14 @@ pipeline {
                 sh 'python -m py_compile init.py'
             }
         }
+	def url
         stage('DeployToStaging') {
             steps {
-		echo 'Change staging localhost directory permissions'
 		node('prod_server'){
+	          echo 'Change staging localhost directory permissions'
                   sh 'sudo chown ubuntu -hR /var/www/flask'
+		  echo 'Fetch staging server public IP'
+		  url = sh(script: "dig +short myip.opendns.com @resolver1.opendns.com", returnStdout: true,)
                 }
                 echo 'deploy flask app'
                     sshPublisher(
@@ -44,6 +47,7 @@ pipeline {
               node('staging_server'){
                 echo 'Application Smoke test'
                 sh 'curl -Is localhost | head -1'
+		echo '${url}'
                 }
             }
         }
