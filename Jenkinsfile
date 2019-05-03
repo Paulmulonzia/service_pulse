@@ -41,7 +41,7 @@ pipeline {
             steps {
 	      node('staging_server'){
                 echo 'Application Smoke test'
-                sh 'curl -Is localhost | head -1'
+                sh 'curl -Isf localhost | head -1'
 		}
             }
         }
