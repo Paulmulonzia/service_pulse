@@ -26,7 +26,7 @@ pipeline {
 				verbose: true,
                                 transfers: [
                                     sshTransfer(
-                                        sourceFiles: 'requirements.txt',
+                                        sourceFiles: 'init.py',
                                         remoteDirectory: '/var/www/flask',
                                         execCommand: 'sudo chown ubuntu /var/www/flask && sudo /etc/init.d/apache2 restart -y'
                                     )
@@ -41,7 +41,7 @@ pipeline {
             steps {
 	      node('staging_server'){
                 echo 'Application Smoke test'
-                sh 'curl -Isf localhost | head -1'
+                sh 'curl -Is localhost | head -1'
 		}
             }
         }
