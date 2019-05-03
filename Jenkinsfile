@@ -14,6 +14,7 @@ pipeline {
             }
         }
 	stage('DeployToStaging') {
+
 	
             steps {
 		echo 'deploy flask app'
@@ -47,12 +48,17 @@ pipeline {
         }
 
 	stage('DeployToProduction') {
+
             when {
                 branch 'master'
             }
             steps {
+
                 input 'Does the staging environment look OK?'
                 echo 'deploy flask app'
+
+                withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+
                     sshPublisher(
                         failOnError: true,
                         continueOnError: false,
@@ -65,13 +71,32 @@ pipeline {
                                         sourceFiles: 'init.py',
                                         remoteDirectory: '/var/www/flask',
                                         execCommand: 'sudo chown -hR ubuntu /var/www/flask && sudo /etc/init.d/apache2 restart -y'
+
+                                configName: 'staging',
+                                sshCredentials: [
+                                    username: "$USERNAME",
+                                    encryptedPassphrase: "$USERPASS"
+                                ], 
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: 'dist/trainSchedule.zip',
+                                        removePrefix: 'dist/',
+                                        remoteDirectory: '/tmp',
+                                        execCommand: 'sudo /usr/bin/systemctl stop train-schedule && rm -rf /opt/train-schedule/* && unzip /tmp/trainSchedule.zip -d /opt/train-schedule && sudo /usr/bin/systemctl start train-schedule'
+
                                     )
                                 ]
                             )
                         ]
                     )
+
             }
 	}
+
+                }
+            }
+        }
+
 
     }
 }
