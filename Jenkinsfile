@@ -26,7 +26,7 @@ pipeline {
 				verbose: true,
                                 transfers: [
                                     sshTransfer(
-                                        sourceFiles: 'init.py',
+                                        sourceFiles: 'requirements.txt',
                                         remoteDirectory: '/var/www/flask',
                                         execCommand: 'sudo chown ubuntu /var/www/flask && sudo /etc/init.d/apache2 restart -y'
                                     )
