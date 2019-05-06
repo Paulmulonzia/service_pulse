@@ -1,18 +1,5 @@
 pipeline {
     agent any
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Running build automation'
-                sh 'sudo /etc/init.d/apache2 start -y'
-            }
-        }
-        stage('Post-build Test') {
-            steps {
-                echo 'Checking for Syntax errors'
-                sh 'python -m py_compile init.py'
-            }
-        }
         stage('DeployToStaging') {
 
             steps {
