@@ -14,6 +14,9 @@ pipeline {
             }
         }
         stage('DeployToStaging') {
+
+            steps {
+=======
             steps {
 		echo 'Change staging localhost directory permissions'
 		node('prod_server'){
@@ -39,6 +42,8 @@ pipeline {
                     )
             }
         }
+
+=======
         stage('Application Smoke Test') {
             steps {
               node('staging_server'){
@@ -47,6 +52,9 @@ pipeline {
                 }
             }
         }
+
+=======
+
         stage('DeployToProduction') {
             when {
                 branch 'master'
@@ -77,6 +85,7 @@ pipeline {
                     )
             }
 	}
+=======
 	stage('Production Application Smoke Test') {
             steps {
               node('prod_server'){
