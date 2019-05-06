@@ -4,7 +4,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Running build automation'
-                sh 'sudo /etc/init.d/apache2 start -y'
+                sh 'sudo service apache2 start -y'
             }
         }
         stage('Post-build Test') {
