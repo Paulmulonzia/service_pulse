@@ -1,10 +1,10 @@
 pipeline {
-    agent none
+    agent any
     stages {
         stage('Build') {
             steps {
                 echo 'Running build automation'
-                sh 'sudo service apache2 start -y'
+                sh 'sudo systemctl start apache2'
             }
         }
         stage('Post-build Test') {
