@@ -1,7 +1,8 @@
 pipeline {
     agent any
+    stages {
+	
         stage('DeployToStaging') {
-
             steps {
                 echo 'deploy flask app'
                     sshPublisher(
