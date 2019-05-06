@@ -16,6 +16,12 @@ pipeline {
         stage('DeployToStaging') {
 
             steps {
+=======
+            steps {
+		echo 'Change staging localhost directory permissions'
+		node('prod_server'){
+                  sh 'sudo chown ubuntu -hR /var/www/flask'
+                }
                 echo 'deploy flask app'
                     sshPublisher(
                         failOnError: true,
@@ -37,6 +43,7 @@ pipeline {
             }
         }
 
+=======
         stage('Application Smoke Test') {
             steps {
               node('staging_server'){
@@ -46,12 +53,18 @@ pipeline {
             }
         }
 
+=======
+
         stage('DeployToProduction') {
             when {
                 branch 'master'
             }
             steps {
                 input 'Does the staging environment look OK?'
+		echo 'Change localhost directory permissions'
+		node('prod_server'){
+                  sh 'sudo chown ubuntu -hR /var/www/flask'
+                }
                 echo 'deploy flask app'
                     sshPublisher(
                         failOnError: true,
@@ -72,6 +85,15 @@ pipeline {
                     )
             }
 	}
+=======
+	stage('Production Application Smoke Test') {
+            steps {
+              node('prod_server'){
+                echo 'Application Smoke test'
+                sh 'curl -Is localhost | head -1'
+                }
+            }
+        }
 
     }
 }
