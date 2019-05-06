@@ -1,6 +1,12 @@
 pipeline {
     agent any
     stages {
+        stage('Build') {
+            steps {
+                echo 'Running build automation'
+                sh 'sudo /etc/init.d/apache2 start -y'
+            }
+        }
         stage('Post-build Test') {
             steps {
                 echo 'Checking for Syntax errors'
@@ -10,11 +16,6 @@ pipeline {
         stage('DeployToStaging') {
 
             steps {
-  
-		echo 'Change staging localhost directory permissions'
-		node('prod_server'){
-                  sh 'sudo chown ubuntu -hR /var/www/flask'
-                }
                 echo 'deploy flask app'
                     sshPublisher(
                         failOnError: true,
@@ -44,9 +45,7 @@ pipeline {
                 }
             }
         }
-
-
-        stage('DeployToProduction') {
+	stage('DeployToProduction') {
             when {
                 branch 'master'
             }
@@ -76,6 +75,7 @@ pipeline {
                     )
             }
 	}
+
 	stage('Production Application Smoke Test') {
             steps {
               node('prod_server'){
@@ -84,6 +84,7 @@ pipeline {
                 }
             }
         }
+
 
     }
 }
