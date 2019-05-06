@@ -16,7 +16,7 @@ pipeline {
         stage('DeployToStaging') {
 
             steps {
-            steps {
+  
 		echo 'Change staging localhost directory permissions'
 		node('prod_server'){
                   sh 'sudo chown ubuntu -hR /var/www/flask'
