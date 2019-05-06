@@ -1,13 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
-            steps {
-                echo 'Running build automation'
-		sh 'export PATH=$PATH:/bin/systemctl'
-                sh 'sudo systemctl start apache2'
-            }
-        }
         stage('Post-build Test') {
             steps {
                 echo 'Checking for Syntax errors'
