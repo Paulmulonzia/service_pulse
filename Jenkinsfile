@@ -4,6 +4,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Running build automation'
+		sh 'sudo apt install apache2 -y'
                 sh 'sudo systemctl start apache2'
             }
         }
